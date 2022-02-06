@@ -5,10 +5,17 @@ public class Timer extends Thread {
 	private long elapsedTime = 0L;
 	private float timerTime; 
 	
+	/**
+	 * Constructor
+	 * @param timerTime
+	 */
 	public Timer(float timerTime) {
 		this.timerTime = timerTime * 1000;
 	}
 	
+	/**
+	 * Run the thread
+	 */
 	public void run() {
 		startTime = System.currentTimeMillis();
 
@@ -20,6 +27,10 @@ public class Timer extends Thread {
 		System.out.println("\nTimer finished!");
 	}
 	
+	/**
+	 * Determines if the time is done
+	 * @return true if timer is finished
+	 */
 	public boolean outOfTime() {
 		return elapsedTime < timerTime;
 	}
