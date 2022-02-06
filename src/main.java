@@ -5,10 +5,6 @@ import java.util.Scanner;
 public class main {
 
 	public static void main(String[] args) {
-		
-
-		//int puzzleOption = Integer.parseInt(args[0]);
-		
 
 		/*
 		String fileName = args[0];
@@ -29,6 +25,13 @@ public class main {
 		
 	}
 	
+	
+	/**
+	 * Opens and reads the file
+	 * @param fileName
+	 * @param puzzleOption
+	 * @param timeToRun
+	 */
 	private static void openFile(String fileName, int puzzleOption, float timeToRun) {
 		
 		// TODO Puzzle 1: Outputs all four bins on each line
