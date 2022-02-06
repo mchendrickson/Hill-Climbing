@@ -1,18 +1,42 @@
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.Date;
 import java.util.Scanner;
 public class main {
 
 	public static void main(String[] args) {
 		
-		int puzzleOption = Integer.parseInt(args[0]);
-		String fileName = args[1];
+
+		//int puzzleOption = Integer.parseInt(args[0]);
+		
+
+		/*
+		String fileName = args[0];
+		int puzzleOption = Integer.parseInt(args[1]);
 		float timeToRun = Float.parseFloat(args[2]);
+		*/
+		
+		String fileName = "test.txt";
+		int puzzleOption = 1;
+		float timeToRun = 5;
+		
+		System.out.println("Running algorithm " + puzzleOption + " for " + timeToRun + " seconds...\n");
+		
+		Timer timer = new Timer(timeToRun);
+		timer.start();
+		
+		openFile(fileName, puzzleOption, timeToRun);
+		
+	}
+	
+	private static void openFile(String fileName, int puzzleOption, float timeToRun) {
 		
 		// TODO Puzzle 1: Outputs all four bins on each line
 		// TODO Puzzle 1: Outputs max score at the end of the run
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...");
+
 		//Taken from https://www.w3schools.com/java/java_files_read.asp
+		
 		try {
 		      File myObj = new File(fileName);
 		      Scanner myReader = new Scanner(myObj);
