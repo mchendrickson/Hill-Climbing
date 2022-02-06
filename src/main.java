@@ -5,11 +5,13 @@ public class main {
 
 	public static void main(String[] args) {
 		
-		String fileName = args[0];
-		int algorithmNum = Integer.parseInt(args[1]);
+		int puzzleOption = Integer.parseInt(args[0]);
+		String fileName = args[1];
 		float timeToRun = Float.parseFloat(args[2]);
 		
-		System.out.println("Running algorithm " + algorithmNum + " for " + timeToRun + " seconds...");
+		// TODO Puzzle 1: Outputs all four bins on each line
+		// TODO Puzzle 1: Outputs max score at the end of the run
+		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...");
 		//Taken from https://www.w3schools.com/java/java_files_read.asp
 		try {
 		      File myObj = new File(fileName);
