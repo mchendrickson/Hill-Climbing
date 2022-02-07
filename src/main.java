@@ -32,12 +32,14 @@ public class main {
 		
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 		
+		//Open the file, then generate two parents
 		openFile(fileName, puzzleOption);
 		binHashMap = generateRandomizedSample(2);
 		System.out.println("Generated " + binHashMap.size() + " bin holders...");
 		
 		//Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
 		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.1f);
+		
 		printBins(binHashMap.get(0));
 		printBins(binHashMap.get(1));
 		printBins(child);
@@ -46,6 +48,11 @@ public class main {
 		
 	    
 	}
+	
+	/**
+	 * Prints all four bins
+	 * @param bin
+	 */
 	public static void printBins(Float[][] bin) {
 		for(int k = 0; k <= 3; k++) {
 	    	  System.out.println();
@@ -57,7 +64,7 @@ public class main {
 	}
 	
 	/**
-	 * breed two parents to create a child
+	 * Breed two parents to create a child
 	 * @param parent1
 	 * @param parent2
 	 * @param mutationPercent from 0.0 to 1.0, will determine how many genes we randomly swap once we breed
@@ -98,7 +105,7 @@ public class main {
 	}
 	
 	/**
-	 * generates randomly sorted bins of size sampleSize
+	 * Generates randomly sorted bins of size sampleSize
 	 * @param sampleSize the size of the requested amount of children
 	 * @return a hashmap of bins
 	 */
@@ -109,12 +116,19 @@ public class main {
 		
 		for(int i = 0; i < sampleSize; i++) {
 			
-			Float[][] randomizedBins = originalBinHolder.clone();
+			//make a copy of the original bin holder
+			Float[][] randomizedBins = new Float[4][10];
+			for(int j = 0; j <= 3; j++) {
+				for(int k = 0; k <= 9; k++) {
+					randomizedBins[j][k] = originalBinHolder[j][k];
+				}
+			}
 			
 			//taken from https://www.tutorialspoint.com/how-to-randomize-and-shuffle-array-of-numbers-in-java
 			for(int j = 0; j <= 3; j++) {
 				
 				for (int k = 0; k < randomizedBins[j].length; k++) {
+				   
 				   int index = rand.nextInt(randomizedBins[j].length - k);
 				   float tmp = randomizedBins[j][randomizedBins[j].length - 1 - k];
 				   randomizedBins[j][randomizedBins[j].length - 1 - k] = randomizedBins[j][index];
@@ -122,6 +136,7 @@ public class main {
 				}
 			}
 			
+			//Enter the randomized child into the hashmap
 			localBinHashMap.put(i, randomizedBins);
 			
 		}
@@ -137,7 +152,6 @@ public class main {
 	 */
 	private static void openFile(String fileName, int puzzleOption) {
 		
-		// TODO Puzzle 1: Outputs all four bins on each line
 		// TODO Puzzle 1: Outputs max score at the end of the run
 		
 
@@ -158,7 +172,6 @@ public class main {
 		    	  }else if(puzzleOption == 2) {
 		    		  
 		    		  String[] towerValues = data.split("\\t");
-		    		  //towerHashMap.put(i, towerValues);
 		    	  }
 		    	  
 		    	  i++;
