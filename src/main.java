@@ -28,22 +28,28 @@ public class main {
 		
 		//Start the timer
 		Timer timer = new Timer(timeToRun);
-		timer.start();
+		timer.start(); //If the timer is finished, timer.finished() returns true
+		
 		
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 		
 		//Open the file, then generate two parents
 		openFile(fileName, puzzleOption);
 		binHashMap = generateRandomizedSample(2);
-		System.out.println("Generated " + binHashMap.size() + " bin holders...");
+		System.out.println("Generated " + binHashMap.size() + " bin holders...\n");
 		
 		//Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
 		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.1f);
 		
+		System.out.println("Parent 1:");
 		printBins(binHashMap.get(0));
+		System.out.println("Parent 2:");
 		printBins(binHashMap.get(1));
+		System.out.println("Child:");
 		printBins(child);
 		
+		
+
 		
 		
 	    

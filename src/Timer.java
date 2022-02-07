@@ -6,7 +6,7 @@ public class Timer extends Thread {
 	private float timerTime; 
 	
 	/**
-	 * Constructor
+	 * Main constructor
 	 * @param timerTime
 	 */
 	public Timer(float timerTime) {
@@ -24,14 +24,14 @@ public class Timer extends Thread {
 		    elapsedTime = (new Date()).getTime() - startTime;
 		    
 		}
-		System.out.println("\n\nTimer finished!");
+		System.out.println("\n\nTimer finished! ");
 	}
 	
 	/**
 	 * Determines if the time is done
 	 * @return true if timer is finished
 	 */
-	public boolean outOfTime() {
-		return elapsedTime < timerTime;
+	public boolean finished() {
+		return elapsedTime >= timerTime;
 	}
 }
