@@ -1,9 +1,13 @@
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 public class main {
-
+	
+	public static HashMap<Integer, Float> binHashMap = new HashMap<Integer, Float>();
+	public static HashMap<Integer, String[]> towerHashMap = new HashMap<Integer, String[]>();
+	
 	public static void main(String[] args) {
 
 		/*
@@ -12,7 +16,7 @@ public class main {
 		float timeToRun = Float.parseFloat(args[2]);
 		*/
 		
-		String fileName = "test.txt";
+		String fileName = "puzzle1test.txt";
 		int puzzleOption = 1;
 		float timeToRun = 5;
 		
@@ -44,8 +48,14 @@ public class main {
 		      File myObj = new File(fileName);
 		      Scanner myReader = new Scanner(myObj);
 		      
+		      int i = 0;
 		      while (myReader.hasNextLine()) {
 		    	  String data = myReader.nextLine();
+		    	  if(puzzleOption == 1) {
+		    		  binHashMap.put(i, Float.parseFloat(data));
+		    	  }
+		    	  i++;
+		    	  
 		    	  System.out.println(data);
 		      }
 		      
@@ -55,6 +65,10 @@ public class main {
 		    	System.out.println("Error: file not found");
 		    	e.printStackTrace();
 		}
+	}
+	
+	public static void reproductionFunction() {
+		
 	}
 	
 	/**
