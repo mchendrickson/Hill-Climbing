@@ -23,7 +23,7 @@ public class main {
 		 */
 
 		// For testing purposes
-		String fileName = "../puzzle1test.txt";
+		String fileName = "puzzle1test.txt";
 		int puzzleOption = 1;
 		float timeToRun = 5;
 
