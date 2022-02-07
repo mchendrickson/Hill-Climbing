@@ -39,8 +39,9 @@ public class main {
 		System.out.println("Generated " + binHashMap.size() + " bin holders...\n");
 		
 		//Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
-		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.1f);
+		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.0f);
 		
+		//Example of two parents and then their child
 		System.out.println("Parent 1:");
 		printBins(binHashMap.get(0));
 		System.out.println("Parent 2:");
@@ -79,18 +80,13 @@ public class main {
 	public static Float[][] reproductionFunction(Float[][] parent1, Float[][] parent2, float mutationPercent) {
 		Float[][] child = new Float[4][10];
 		Random rand = new Random();
+
+		//Take the 0th and 2nd columns from the first parent and the 1st and 3rd from the second
 		for(int i = 0; i <= 3; i++) {
-			for(int j = 0; j <= 9; j++){
-				
-				//randomly select what "gene" the child gets
-				int randInt = rand.nextInt(2);
-				
-				if(randInt == 0) {
-					child[i][j] = parent1[i][j];
-				}else if(randInt == 1) {
-					child[i][j] = parent2[i][j];
-				}
-				
+			if(i % 2 == 0) {
+				child[i] = parent1[i];
+			}else {
+				child[i] = parent2[i];
 			}
 		}
 		
