@@ -30,17 +30,71 @@ public class main {
 		Timer timer = new Timer(timeToRun);
 		timer.start();
 		
-		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...");
+		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 		
 		openFile(fileName, puzzleOption);
-		binHashMap = generateRandomizedSample(1000);
+		binHashMap = generateRandomizedSample(2);
+		System.out.println("Generated " + binHashMap.size() + " bin holders...");
 		
+		//Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
+		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.1f);
+		printBins(binHashMap.get(0));
+		printBins(binHashMap.get(1));
+		printBins(child);
+		
+		
+		
+	    
+	}
+	public static void printBins(Float[][] bin) {
 		for(int k = 0; k <= 3; k++) {
-	    	  System.out.println("\n");
+	    	  System.out.println();
 	    	  for(int j = 0; j <= 9; j++) {
-			    	System.out.print(binHashMap.get(1)[k][j] + "   ");
+			    	System.out.print(bin[k][j] + "  ");
 			  }
 	    }
+		System.out.println("\n\n");
+	}
+	
+	/**
+	 * breed two parents to create a child
+	 * @param parent1
+	 * @param parent2
+	 * @param mutationPercent from 0.0 to 1.0, will determine how many genes we randomly swap once we breed
+	 * @return child
+	 */
+	public static Float[][] reproductionFunction(Float[][] parent1, Float[][] parent2, float mutationPercent) {
+		Float[][] child = new Float[4][10];
+		Random rand = new Random();
+		for(int i = 0; i <= 3; i++) {
+			for(int j = 0; j <= 9; j++){
+				
+				//randomly select what "gene" the child gets
+				int randInt = rand.nextInt(2);
+				
+				if(randInt == 0) {
+					child[i][j] = parent1[i][j];
+				}else if(randInt == 1) {
+					child[i][j] = parent2[i][j];
+				}
+				
+			}
+		}
+		
+		//Mutate the genes so they can cross buckets
+		for(int i = 0; i < mutationPercent * 40; i++) {
+			int randBin1 = rand.nextInt(4);
+			int randValue1 = rand.nextInt(10);
+			
+			int randBin2 = rand.nextInt(4);
+			int randValue2 = rand.nextInt(10);
+			
+			float temp = child[randBin1][randValue1];
+			child[randBin1][randValue1] = child[randBin2][randValue2];
+			child[randBin2][randValue2] = temp;
+		}
+		
+		return child;
 	}
 	
 	/**
@@ -53,7 +107,7 @@ public class main {
 		HashMap<Integer, Float[][]> localBinHashMap = new HashMap<Integer, Float[][]>();
 		Random rand = new Random();
 		
-		for(int i = 0; i <= sampleSize; i++) {
+		for(int i = 0; i < sampleSize; i++) {
 			
 			Float[][] randomizedBins = originalBinHolder.clone();
 			
@@ -74,12 +128,6 @@ public class main {
 		
 		return localBinHashMap;
 	}
-	
-	public static void reproductionFunction(Float[][] binHolder1, Float[][] binHolder2, float mutationAmount) {
-		
-		
-	}
-	
 	
 	/**
 	 * Opens and reads the file
