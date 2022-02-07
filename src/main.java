@@ -30,7 +30,6 @@ public class main {
 		Timer timer = new Timer(timeToRun);
 		timer.start(); //If the timer is finished, timer.finished() returns true
 		
-		
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 		
 		//Open the file, then generate two parents
@@ -39,7 +38,7 @@ public class main {
 		System.out.println("Generated " + binHashMap.size() + " bin holders...\n");
 		
 		//Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
-		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.0f);
+		Float[][] child = reproductionFunction(binHashMap.get(0), binHashMap.get(1), 0.1f);
 		
 		//Example of two parents and then their child
 		System.out.println("Parent 1:");
@@ -48,12 +47,7 @@ public class main {
 		printBins(binHashMap.get(1));
 		System.out.println("Child:");
 		printBins(child);
-		
-		
-
-		
-		
-	    
+		    
 	}
 	
 	/**
