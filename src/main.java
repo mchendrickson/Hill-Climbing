@@ -1,5 +1,6 @@
 import java.io.File; // Import the File class
 import java.io.FileNotFoundException; // Import this class to handle errors
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class main {
 		 */
 
 		// For testing purposes
-		String fileName = "../puzzle1test.txt";
+		String fileName = "puzzle1test.txt";
 		int puzzleOption = 1;
 		float timeToRun = 5;
 
@@ -37,6 +38,7 @@ public class main {
 		openFile(fileName, puzzleOption);
 		binHashMap = generateRandomizedPopulation(40);
 		System.out.println("Generated " + binHashMap.size() + " bin holders...\n");
+    
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);
 		Individual best = ga.GA(binHashMap);
 		printBins(best.getData());
@@ -146,6 +148,4 @@ public class main {
 			e.printStackTrace();
 		}
 	}
-
-	
 }
