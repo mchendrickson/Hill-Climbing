@@ -1,18 +1,18 @@
 
 public class Tower extends Individual {
 
-	Piece[] pieces;
+	String[] pieces;
 	float fitnessScore;
 	
-	public Tower(Piece[] pieces) {
+	public Tower(String[] pieces) {
 		this.pieces = pieces;
 		this.fitnessScore = 0;
 	}
 	
 	@Override
-	public Piece[] getPieces(){return this.pieces;}
+	public String[] getPieces(){return this.pieces;}
 	@Override
-	public void setPieces(Piece[] p) {this.pieces = p;}
+	public void setPieces(String[] p) {this.pieces = p;}
 
 	@Override
 	public Float[][] getData() {

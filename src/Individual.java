@@ -16,6 +16,6 @@ public abstract class Individual {
 	public abstract void setData(Float[][] d);
 	
 	
-	public abstract Piece[] getPieces();
-	public abstract void setPieces(Piece[] p);
+	public abstract String[] getPieces();
+	public abstract void setPieces(String[] p);
 }
