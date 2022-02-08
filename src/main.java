@@ -1,5 +1,6 @@
 import java.io.File; // Import the File class
 import java.io.FileNotFoundException; // Import this class to handle errors
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
@@ -48,7 +49,6 @@ public class main {
 		printBins(binHashMap.get(1).getData());
 		System.out.println("Child:");
 		printBins(child);
-
 	}
 
 	/**
@@ -180,6 +180,4 @@ public class main {
 			e.printStackTrace();
 		}
 	}
-
-	
 }
