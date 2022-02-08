@@ -5,6 +5,7 @@ public class Individual {
 	
 	public Individual(Float[][] data) {
 		this.data = data;
+		this.fitnessScore = 0;
 	}
 	
 	public Float[][] getData(){return this.data;}
