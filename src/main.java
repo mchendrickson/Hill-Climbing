@@ -29,26 +29,33 @@ public class main {
 		float timeToRun = 5;
 
 		// Start the timer
-		Timer timer = new Timer(timeToRun);
-		timer.start(); // If the timer is finished, timer.finished() returns true
+//		Timer timer = new Timer(timeToRun);
+//		timer.start(); // If the timer is finished, timer.finished() returns true
 
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 
 		// Open the file, then generate two parents
 		openFile(fileName, puzzleOption);
-		binHashMap = generateRandomizedPopulation(2);
+		binHashMap = generateRandomizedPopulation(40);
 		System.out.println("Generated " + binHashMap.size() + " bin holders...\n");
+    
+		GeneticAlgo ga = new GeneticAlgo(timeToRun);
+		Individual best = ga.GA(binHashMap);
+		printBins(best.getData());
+		System.out.println(best.getFitness());
+		
+		
+//		// Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
+//		Float[][] child = reproductionFunction(binHashMap.get(0).getData(), binHashMap.get(1).getData(), 0.1f);
+//
+//		// Example of two parents and then their child
+//		System.out.println("Parent 1:");
+//		printBins(binHashMap.get(0).getData());
+//		System.out.println("Parent 2:");
+//		printBins(binHashMap.get(1).getData());
+//		System.out.println("Child:");
+//		printBins(child);
 
-		// Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
-		Float[][] child = reproductionFunction(binHashMap.get(0).getData(), binHashMap.get(1).getData(), 0.1f);
-
-		// Example of two parents and then their child
-		System.out.println("Parent 1:");
-		printBins(binHashMap.get(0).getData());
-		System.out.println("Parent 2:");
-		printBins(binHashMap.get(1).getData());
-		System.out.println("Child:");
-		printBins(child);
 	}
 
 	/**
@@ -65,45 +72,6 @@ public class main {
 			}
 		}
 		System.out.println("\n\n");
-	}
-
-	/**
-	 * Breed two parents to create a child
-	 * 
-	 * @param parent1
-	 * @param parent2
-	 * @param mutationPercent from 0.0 to 1.0, will determine how many genes we
-	 *                        randomly swap once we breed
-	 * @return child
-	 */
-	public static Float[][] reproductionFunction(Float[][] parent1, Float[][] parent2, float mutationPercent) {
-		Float[][] child = new Float[4][10];
-		Random rand = new Random();
-
-		// Take the 0th and 2nd columns from the first parent and the 1st and 3rd from
-		// the second
-		for (int i = 0; i <= 3; i++) {
-			if (i % 2 == 0) {
-				child[i] = parent1[i];
-			} else {
-				child[i] = parent2[i];
-			}
-		}
-
-		// Mutate the genes so they can cross buckets
-		for (int i = 0; i < mutationPercent * 40; i++) {
-			int randBin1 = rand.nextInt(4);
-			int randValue1 = rand.nextInt(10);
-
-			int randBin2 = rand.nextInt(4);
-			int randValue2 = rand.nextInt(10);
-
-			float temp = child[randBin1][randValue1];
-			child[randBin1][randValue1] = child[randBin2][randValue2];
-			child[randBin2][randValue2] = temp;
-		}
-
-		return child;
 	}
 
 	/**
