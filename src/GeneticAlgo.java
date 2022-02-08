@@ -1,5 +1,6 @@
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Random;
 
 public class GeneticAlgo {
 
@@ -18,29 +19,30 @@ public class GeneticAlgo {
 	 * @param population (uninitialized)
 	 * @return best individual
 	 */
-	public Individual GA(HashMap<Integer, Individual> population){
+	public Individual GA(int puzzleOption, HashMap<Integer, Individual> population){
 		HashMap<Integer, Individual> newPopulation = new HashMap<Integer, Individual>();
 		float bestScore = 0;
 		int bestKey = 0;
 		timer.run();
-//		for(int i = 0; i < population.size(); i++) {
-//			population.get(i).setFitness(puzzleOneFitness(population.get(i)));
-//		} 
 		do {
 			Random rand = new Random();
 			for(int i = 0; i < population.size(); i++) {
-				/*TODO: randomly select 2 members of population
-				 * 	-make child
-				 * 	-maybe mutate?
-				 * 	-add child to new population
-				 */
+				//randomly pick two parents from population
 				Individual x = population.get(rand.nextInt(population.size()));
 				Individual y = population.get(rand.nextInt(population.size()));
+				
+				/*
+				 * Reproduction only set up to work with puzzle 1 
+				 */
+				
+				//get the data of the child
 				Float[][] childData = reproductionFunction(x.getData(), y.getData(), 0.05f);
-				newPopulation.put(i, new Individual(childData));
-				newPopulation.get(i).setFitness(puzzleOneFitness(newPopulation.get(i)));
+				//add child to new population
+				newPopulation.put(i, new BinSet(childData));
+				//set the fitness score of the new child
+				newPopulation.get(i).setFitness(0);	//TODO: fitnessFunction(puzzleOption, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
-					bestScore = newPopulation.get(i).getFitness();
+					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
 					bestKey = i;
 				}
 			}
@@ -58,6 +60,11 @@ public class GeneticAlgo {
 	 * @param height       height of the tower
 	 * @param totalCost    cost to make the tower
 	 * @return the fitness score
+	 */
+	
+	/*would help abstraction if this signature was:
+	 * 
+	 * public static float fitnessFunction(int puzzleOption, Individual i){}
 	 */
 	public static float fitnessFunction(int puzzleOption, float bin1, float bin2, float bin3, int height,
 			int totalCost) {
@@ -136,44 +143,7 @@ public class GeneticAlgo {
 			cost += Integer.parseInt(pieceCost[3]);
 		}
 		return cost;
-
-	
-//	public static float puzzleOneFitness(Individual a) {
-//		float score = 0;
-//		for(int i = 0; i < 4; i++) {
-//			Float[] bin = a.getData()[i];
-//			if(i == 0) {score += multiplyBin(bin);}
-//			if(i == 1) {score += sumBin(bin);}
-//			if(i == 2) {score += rangeBin(bin);}
-//		}
-//		return score;
-//	}
-//	
-//	public static float multiplyBin(Float[] bin) {
-//		float score = 1;
-//		for(int i = 0; i < 10; i++) {
-//			score = score * bin[i];
-//		}
-//		return score;
-//	}
-//	
-//	public static float sumBin(Float[] bin) {
-//		float score = 0;
-//		for(int i = 0; i < 10; i++) {
-//			score = score + bin[i];
-//		}
-//		return score;
-//	}
-//	
-//	public static float rangeBin(Float[] bin) {
-//		float max = bin[0];
-//		float min = bin[0];
-//		for(int i = 0; i < 10; i++) {
-//			if(bin[i] > max) {max = bin[i];}
-//			if(bin[i] < min) {min = bin[i];}
-//		}
-//		return max - min;
-//	}
+	}
 	
 	/**
 	 * Breed two parents to create a child

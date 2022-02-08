@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class main {
 
 	// Contains all the initial values, unmodified
-	public static HashMap<Integer, Individual> binHashMap;
-	public static HashMap<Integer, String[]> towerHashMap;
+	public static HashMap<Integer, Individual> puzzleHashMap;
+//	public static HashMap<Integer, String[]> towerHashMap;
 
 	// An example of how we can hold all the data from each bin, 0-3 for each bin,
 	// 0-9 for each value in the bin
@@ -24,6 +24,7 @@ public class main {
 		 */
 
 		// For testing purposes
+//		String fileName = "../puzzle1test.txt";	//for testing on Alyssa's PC
 		String fileName = "puzzle1test.txt";
 		int puzzleOption = 1;
 		float timeToRun = 5;
@@ -36,11 +37,11 @@ public class main {
 
 		// Open the file, then generate two parents
 		openFile(fileName, puzzleOption);
-		binHashMap = generateRandomizedPopulation(40);
-		System.out.println("Generated " + binHashMap.size() + " bin holders...\n");
+		puzzleHashMap = generateRandomizedPopulation(40);
+		System.out.println("Generated " + puzzleHashMap.size() + " bin holders...\n");
     
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);
-		Individual best = ga.GA(binHashMap);
+		Individual best = ga.GA(puzzleOption, puzzleHashMap);
 		printBins(best.getData());
 		System.out.println(best.getFitness());
 		
@@ -75,7 +76,7 @@ public class main {
 	}
 
 	/**
-	 * Generates population of randomly sorted bins of size sampleSize
+	 * Generates population of randomly sorted bins of size sampleSize (For Puzzle 1)
 	 * 
 	 * @param sampleSize the size of the requested amount of individuals in population
 	 * @return a hashmap of individuals
@@ -103,7 +104,7 @@ public class main {
 				}
 			}
 			// Enter the randomized child into the array
-			population.put(i, new Individual(randomizedBins));
+			population.put(i, new BinSet(randomizedBins));
 		}
 		return population;
 	}
