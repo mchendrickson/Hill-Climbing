@@ -1,7 +1,5 @@
 import java.io.File; // Import the File class
 import java.io.FileNotFoundException; // Import this class to handle errors
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
@@ -117,9 +115,6 @@ public class main {
 	 * @param timeToRun
 	 */
 	private static void openFile(String fileName, int puzzleOption) {
-
-		// TODO Puzzle 1: Outputs max score at the end of the run
-
 		// Taken from https://www.w3schools.com/java/java_files_read.asp
 
 		try {
@@ -138,9 +133,7 @@ public class main {
 
 					String[] towerValues = data.split("\\t");
 				}
-
 				i++;
-
 			}
 			myReader.close();
 
