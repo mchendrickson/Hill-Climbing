@@ -22,8 +22,8 @@ public class main {
 		 */
 
 		// For testing purposes
-//		String fileName = "../puzzle1test.txt";	//for testing on Alyssa's PC
-		String fileName = "puzzle1test.txt";
+		String fileName = "../puzzle1test.txt";	//for testing on Alyssa's PC
+//		String fileName = "puzzle1test.txt";
 		int puzzleOption = 1;
 		float timeToRun = 5;
 
@@ -35,7 +35,7 @@ public class main {
 
 		// Open the file, then generate two parents
 		openFile(fileName, puzzleOption);
-		puzzleHashMap = generateRandomizedPopulation(40);
+		puzzleHashMap = generateRandomizedPopulation(100);	//increasing this gets better results
 		System.out.println("Generated " + puzzleHashMap.size() + " bin holders...\n");
     
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);

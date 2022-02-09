@@ -32,15 +32,15 @@ public class GeneticAlgo {
 				//randomly pick two parents from population
 				Individual x = population.get(rand.nextInt(population.size()));
 				Individual y = population.get(rand.nextInt(population.size()));
+				//check the puzzle
+				if(puzzleOption==1) {
+					Float[][] childData = reproductionFunction(x.getData(), y.getData(), 0.05f); //get the data of the child
+					newPopulation.put(i, new BinSet(childData)); //add child to new population
+				}else if(puzzleOption==2) {
+					Piece[] childTower = null;	//get the pieces of the child
+					newPopulation.put(i, new Tower(childTower)); //add child to new population
+				}
 				
-				/*
-				 * Reproduction only set up to work with puzzle 1 
-				 */
-				
-				//get the data of the child
-				Float[][] childData = reproductionFunction(x.getData(), y.getData(), 0.05f);
-				//add child to new population
-				newPopulation.put(i, new BinSet(childData));
 				//set the fitness score of the new child
 				newPopulation.get(i).setFitness(fitnessFunction(1, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
@@ -70,10 +70,13 @@ public class GeneticAlgo {
 			fitnessScore = bin1 + bin2 + bin3;
 		} else if (puzzleOption == 2) {
 			Piece [] pieces = individual.getPieces();
-			
-			float totalCost = getCost(pieces);
-			int height = getHeight(pieces);
-			fitnessScore =  (float) (10 + Math.pow(height, 2) - totalCost);
+			if(!checkValidTower(pieces)) {
+				fitnessScore = 0;
+			}else {
+				float totalCost = getCost(pieces);
+				int height = getHeight(pieces);
+				fitnessScore =  (float) (10 + Math.pow(height, 2) - totalCost);
+			}
 		}
 		return fitnessScore;
 	}
@@ -143,6 +146,30 @@ public class GeneticAlgo {
 			cost += piece.getCost();
 		}
 		return cost;
+	}
+	
+	/**
+	 * Checks that the tower configuration is valid
+	 * @param tower a tower config
+	 * @return boolean whether valid
+	 */
+	public static boolean checkValidTower(Piece[] pieces){
+		float prevWidth = 0;
+		for(int k = 0; k < pieces.length; k++) {
+			if(k==0 && !pieces[k].getType().equals("Door")) {	//first piece door
+				return false;
+			}else if(k==(pieces.length-1) && !pieces[k].getType().equals("Lookout")) {	//last piece lookout
+				return false;
+			}else if((k!=0)&&(k!=(pieces.length-1)) && (!pieces[k].getType().equals("Wall"))){	//intermediate pieces are walls
+				return false;
+			}else if(pieces[k].getWidth() > prevWidth) {	//piece isn't wider than last piece
+				return false;
+			}else if(pieces[k].getStrength() < (pieces.length - k - 1)) {	//number pieces left isn't more than strength
+				return false;
+			}
+			prevWidth = pieces[k].getWidth();
+		}
+		return true;	//passes all rules
 	}
 	
 	/**
