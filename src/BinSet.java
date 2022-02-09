@@ -15,13 +15,13 @@ public class BinSet extends Individual {
 	public void setData(Float[][] d) {this.data = d;}
 
 	@Override
-	public Piece[] getPieces() {
+	public String[] getPieces() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setPieces(Piece[] p) {
+	public void setPieces(String[] p) {
 		// TODO Auto-generated method stub
 		
 	}

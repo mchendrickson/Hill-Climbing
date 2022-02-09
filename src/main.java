@@ -46,17 +46,18 @@ public class main {
 		System.out.println(best.getFitness());
 		
 		
-//		// Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
-//		Float[][] child = reproductionFunction(binHashMap.get(0).getData(), binHashMap.get(1).getData(), 0.1f);
-//
-//		// Example of two parents and then their child
-//		System.out.println("Parent 1:");
-//		printBins(binHashMap.get(0).getData());
-//		System.out.println("Parent 2:");
-//		printBins(binHashMap.get(1).getData());
-//		System.out.println("Child:");
-//		printBins(child);
+		/*
+		// Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
+		Float[][] child = GeneticAlgo.reproductionFunction(puzzleHashMap.get(0).getData(), puzzleHashMap.get(1).getData(), 0.1f);
 
+		// Example of two parents and then their child
+		System.out.println("Parent 1:");
+		printBins(puzzleHashMap.get(0).getData());
+		System.out.println("Parent 2:");
+		printBins(puzzleHashMap.get(1).getData());
+		System.out.println("Child:");
+		printBins(child);
+		*/
 	}
 
 	/**

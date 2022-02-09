@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgo {
@@ -157,14 +160,82 @@ public class GeneticAlgo {
 	public static Float[][] reproductionFunction(Float[][] parent1, Float[][] parent2, float mutationPercent) {
 		Float[][] child = new Float[4][10];
 		Random rand = new Random();
-
-		// Take the 0th and 2nd columns from the first parent and the 1st and 3rd from
-		// the second
+		
+		HashMap<String, Integer> unusedValues = new HashMap<String, Integer>();
 		for (int i = 0; i <= 3; i++) {
-			if (i % 2 == 0) {
-				child[i] = parent1[i];
-			} else {
-				child[i] = parent2[i];
+
+			for (int j = 0; j <= 9; j++) {
+				if(unusedValues.containsKey(parent1[i][j].toString())) {
+					int currValueCount = unusedValues.get(parent1[i][j].toString());
+					unusedValues.remove(parent1[i][j].toString());
+					currValueCount++;
+					unusedValues.put(parent1[i][j].toString(), currValueCount);
+					
+				}else {
+					unusedValues.put(parent1[i][j].toString(), 1);
+				}
+					
+				
+			}
+		}
+
+		//For each row, take the first 5 from parent 1 and the second 5 from parent 2 and combine them.
+		
+		for(int i = 0; i <=3; i++) {
+			
+			for(int j = 0; j <= 9; j++) {
+				
+				if(j <= 4) {
+					//Check and see if we haven't used the specific value
+					
+					int currValueCount = unusedValues.get(parent1[i][j].toString());
+					if(currValueCount != 0) {
+						child[i][j] = parent1[i][j];
+						currValueCount--;
+						unusedValues.replace(parent1[i][j].toString(), currValueCount--);
+					}else {
+						child[i][j] = Float.MAX_VALUE; //a placeholder to make finding duplicates easier
+					}
+					
+					
+				}else if(j > 4){
+					//Check and see if we haven't used the specific value
+					int currValueCount = unusedValues.get(parent2[i][j].toString());
+					if(currValueCount != 0) {
+						child[i][j] = parent2[i][j];
+						currValueCount--;
+						unusedValues.replace(parent2[i][j].toString(), currValueCount);
+					}else {
+						child[i][j] = Float.MAX_VALUE; //a placeholder to make finding duplicates easier
+					}
+					
+				}
+			}
+		}
+		
+		unusedValues.values().removeAll(Collections.singleton(0)); //remove all unused elements
+		List<String> keysAsArray = new ArrayList<String>(unusedValues.keySet()); //get all unused values as keys
+
+		for(int i = 0; i <= 3; i++) {
+			
+			for(int j = 0; j <= 9; j++) {
+					
+				if(child[i][j] == Float.MAX_VALUE) {
+					
+					String randomKey = keysAsArray.get(rand.nextInt(keysAsArray.size())); //get a random key
+					int currValueCount = unusedValues.get(randomKey); //get the amount of that random key
+					child[i][j] = Float.parseFloat(randomKey); //set the value to that random key
+					
+					//If its the last one, remove it from the list, if not, decrement the list.
+					if(currValueCount <= 1) {
+						unusedValues.remove(randomKey);
+						keysAsArray = new ArrayList<String>(unusedValues.keySet());
+					}else {
+						currValueCount--;
+						unusedValues.replace(randomKey, currValueCount);
+					}
+				
+				}
 			}
 		}
 
