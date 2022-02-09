@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +42,7 @@ public class GeneticAlgo {
 				//add child to new population
 				newPopulation.put(i, new BinSet(childData));
 				//set the fitness score of the new child
-				newPopulation.get(i).setFitness(0);	//TODO: fitnessFunction(puzzleOption, newPopulation.get(i)));
+				newPopulation.get(i).setFitness(fitnessFunction(1, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
 					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
 					bestKey = i;
@@ -57,25 +56,24 @@ public class GeneticAlgo {
 	 * Calculates the fitness of each individual
 	 * 
 	 * @param puzzleOption 1 for puzzle 1 or 2 for puzzle 2
-	 * @param bin1         the product of numbers
-	 * @param bin2         the sum of numbers
-	 * @param bin3         the calculated range
-	 * @param height       height of the tower
-	 * @param totalCost    cost to make the tower
+	 * @param individual calculating the score for this individual
 	 * @return the fitness score
 	 */
-	
-	/*would help abstraction if this signature was:
-	 * 
-	 * public static float fitnessFunction(int puzzleOption, Individual i){}
-	 */
-	public static float fitnessFunction(int puzzleOption, float bin1, float bin2, float bin3, int height,
-			int totalCost) {
+	public static float fitnessFunction(int puzzleOption, Individual individual) {
 		float fitnessScore = 0;
 		if (puzzleOption == 1) {
+			float [][] bins = Utility.convertToPrimitive(individual.getData());
+
+			float bin1 = calculateBin1(bins[0]);
+			float bin2 = calculateBin2(bins[1]);
+			float bin3 = calculateBin3(bins[2]);
 			fitnessScore = bin1 + bin2 + bin3;
 		} else if (puzzleOption == 2) {
-			fitnessScore = (float) (10 + Math.pow(height, 2) - totalCost);
+			Piece [] pieces = individual.getPieces();
+			
+			float totalCost = getCost(pieces);
+			int height = getHeight(pieces);
+			fitnessScore =  (float) (10 + Math.pow(height, 2) - totalCost);
 		}
 		return fitnessScore;
 	}
@@ -83,13 +81,13 @@ public class GeneticAlgo {
 
 	/**
 	 * Calculates the product of numbers in bin 1
-	 * @param bin1 numbers to be multiplied
+	 * @param bins numbers to be multiplied
 	 * @return the product of the bin
 	 */
-	public static float calculateBin1(float[][] bin1) {
+	public static float calculateBin1(float[] bin1) {
 		float product = 1;
-        for (int i = 0; i < bin1[0].length; i++) {
-        	product *= bin1[0][i];
+        for (int i = 0; i < bin1.length; i++) {
+        	product *= bin1[i];
         }
         return product;
 	}
@@ -99,10 +97,10 @@ public class GeneticAlgo {
 	 * @param bin2 the numbers to be added
 	 * @return the sum of the bin
 	 */
-	public static float calculateBin2(float[][] bin2) {
+	public static float calculateBin2(float[] bin2) {
 		float sum = 0;
-        for (int i = 0; i < bin2[1].length; i++) {
-        	sum += bin2[1][i];
+        for (int i = 0; i < bin2.length; i++) {
+        	sum += bin2[i];
         }
         return sum;
 	}
@@ -112,14 +110,14 @@ public class GeneticAlgo {
 	 * @param bin3 the numbers to get the range
 	 * @return the range of the bin
 	 */
-	public static float calculateBin3(float[][] bin3) {
-		float max = bin3[2][0];
-        float min = bin3[2][0];
-        for (int i = 0; i < bin3[2].length; i++) {
-            if (bin3[2][i] > max) {
-                max = bin3[2][i];
-            } else if (bin3[2][i] < min) {
-                min = bin3[2][i];
+	public static float calculateBin3(float[] bin3) {
+		float max = bin3[0];
+        float min = bin3[0];
+        for (int i = 0; i < bin3.length; i++) {
+            if (bin3[i] > max) {
+                max = bin3[i];
+            } else if (bin3[i] < min) {
+                min = bin3[i];
             }
         }
         return max - min;
@@ -130,8 +128,8 @@ public class GeneticAlgo {
 	 * @param tower the constructed tower
 	 * @return the height
 	 */
-	public static int getHeight(HashMap<Integer, String[]> tower) {		
-		return tower.size();
+	public static int getHeight(Piece [] pieces) {		
+		return pieces.length;
 	}
 	
 	/**
@@ -139,11 +137,10 @@ public class GeneticAlgo {
 	 * @param tower the constructed tower
 	 * @return the total cost of the tower
 	 */
-	public static int getCost(HashMap<Integer, String[]> tower) {
+	public static float getCost(Piece [] pieces) {
 		int cost = 0;
-		Collection<String[]> towerValues = tower.values();
-		for (String[] pieceCost : towerValues) {
-			cost += Integer.parseInt(pieceCost[3]);
+		for (Piece piece : pieces) {
+			cost += piece.getCost();
 		}
 		return cost;
 	}
@@ -251,9 +248,7 @@ public class GeneticAlgo {
 			child[randBin1][randValue1] = child[randBin2][randValue2];
 			child[randBin2][randValue2] = temp;
 		}
-
 		return child;
-
 	}
 }
 

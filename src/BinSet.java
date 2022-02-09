@@ -2,6 +2,7 @@
 public class BinSet extends Individual {
 
 	Float[][] data;
+	Piece [] pieceData;
 	float fitnessScore;
 	
 	public BinSet(Float[][] data) {
@@ -9,22 +10,22 @@ public class BinSet extends Individual {
 		this.fitnessScore = 0;
 	}
 	
+	public BinSet(Piece[] pieceData) {
+		this.pieceData = pieceData;
+		this.fitnessScore = 0;
+	}
+	
+
 	@Override
 	public Float[][] getData(){return this.data;}
 	@Override
 	public void setData(Float[][] d) {this.data = d;}
 
 	@Override
-	public String[] getPieces() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public Piece[] getPieces() { return pieceData; }
 
 	@Override
-	public void setPieces(String[] p) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setPieces(Piece[] p) { this.pieceData = p; }
 	
 //	public float getFitness() {return this.fitnessScore;}
 //	public void setFitness(float f) {this.fitnessScore = f;}
