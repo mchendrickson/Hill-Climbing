@@ -37,12 +37,12 @@ public class GeneticAlgo {
 					Float[][] childData = reproductionFunction(x.getData(), y.getData(), 0.05f); //get the data of the child
 					newPopulation.put(i, new BinSet(childData)); //add child to new population
 				}else if(puzzleOption==2) {
-					Piece[] childTower = null;	//get the pieces of the child
+					Piece[] childTower = reproductionFunction(x.getPieces(), y.getPieces(), 0.05f);	//get the pieces of the child
 					newPopulation.put(i, new Tower(childTower)); //add child to new population
 				}
 				
 				//set the fitness score of the new child
-				newPopulation.get(i).setFitness(fitnessFunction(1, newPopulation.get(i)));
+				newPopulation.get(i).setFitness(fitnessFunction(puzzleOption, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
 					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
 					bestKey = i;
@@ -131,8 +131,17 @@ public class GeneticAlgo {
 	 * @param tower the constructed tower
 	 * @return the height
 	 */
+
 	public static int getHeight(Piece [] pieces) {		
-		return pieces.length;
+		int total = 0;
+		for(Piece piece : pieces){
+			if(piece.isIncluded()) {
+				total++;
+			}
+			
+		}
+		
+		return total;
 	}
 	
 	/**
@@ -143,7 +152,9 @@ public class GeneticAlgo {
 	public static float getCost(Piece [] pieces) {
 		int cost = 0;
 		for (Piece piece : pieces) {
-			cost += piece.getCost();
+			if(piece.isIncluded()) {
+				cost += piece.getCost();
+			}
 		}
 		return cost;
 	}
@@ -154,22 +165,31 @@ public class GeneticAlgo {
 	 * @return boolean whether valid
 	 */
 	public static boolean checkValidTower(Piece[] pieces){
-		float prevWidth = 0;
-		for(int k = 0; k < pieces.length; k++) {
-			if(k==0 && !pieces[k].getType().equals("Door")) {	//first piece door
-				return false;
-			}else if(k==(pieces.length-1) && !pieces[k].getType().equals("Lookout")) {	//last piece lookout
-				return false;
-			}else if((k!=0)&&(k!=(pieces.length-1)) && (!pieces[k].getType().equals("Wall"))){	//intermediate pieces are walls
-				return false;
-			}else if(pieces[k].getWidth() > prevWidth) {	//piece isn't wider than last piece
-				return false;
-			}else if(pieces[k].getStrength() < (pieces.length - k - 1)) {	//number pieces left isn't more than strength
-				return false;
+		float prevWidth = Float.MAX_VALUE;
+		List<Piece> includedPieces = new ArrayList<Piece>();
+		for(Piece piece : pieces) {
+			if(piece.isIncluded()) {
+				includedPieces.add(piece);
 			}
-			prevWidth = pieces[k].getWidth();
+		}
+		
+		for(int k = 0; k < includedPieces.size(); k++) {
+				if(k==0 && !includedPieces.get(k).getType().equals("Door")) {	//first piece door
+					return false;
+				}else if(k==(includedPieces.size()-1) && !includedPieces.get(k).getType().equals("Lookout")) {	//last piece lookout
+					return false;
+				}else if((k!=0)&&(k!=(includedPieces.size()-1)) && (!includedPieces.get(k).getType().equals("Wall"))){	//intermediate pieces are walls
+					return false;
+				}else if(includedPieces.get(k).getWidth() > prevWidth) {	//piece isn't wider than last piece
+					return false;
+				}else if(includedPieces.get(k).getStrength() < (includedPieces.size() - k - 1)) {	//number pieces left isn't more than strength
+					return false;
+				}
+				prevWidth = includedPieces.get(k).getWidth();
+			
 		}
 		return true;	//passes all rules
+		
 	}
 	
 	/**
@@ -181,6 +201,100 @@ public class GeneticAlgo {
 	 *                        randomly swap once we breed
 	 * @return child
 	 */
+	public static Piece[] reproductionFunction(Piece[] parent1, Piece[] parent2, float mutationPercent) {
+		Piece[] child = new Piece[parent1.length];
+		Random rand = new Random();
+		
+		HashMap<String, Integer> unusedValues = new HashMap<String, Integer>();
+		
+		//Map all tower values to the string
+		for(int i = 0; i < child.length; i++) {
+			
+			if(unusedValues.containsKey(parent1[i].toString())) {
+				int currValueCount = unusedValues.get(parent1[i].toString());
+				unusedValues.remove(parent1[i].toString());
+				currValueCount++;
+				unusedValues.put(parent1[i].toString(), currValueCount);
+				
+			}else {
+				unusedValues.put(parent1[i].toString(), 1);
+			}
+			
+			
+		}
+		
+		
+		for(int i = 0; i < child.length; i++) {
+			
+			if(i <= child.length / 2) {
+				//Check and see if we haven't used the specific value
+				
+				int currValueCount = unusedValues.get(parent1[i].toString());
+				if(currValueCount != 0) {
+					child[i] = parent1[i];
+					currValueCount--;
+					unusedValues.replace(parent1[i].toString(), currValueCount--);
+				}else {
+					child[i] = null; //a placeholder to make finding duplicates easier
+				}
+				
+				
+			}else if(i > child.length / 2){
+				//Check and see if we haven't used the specific value
+				int currValueCount = unusedValues.get(parent2[i].toString());
+				if(currValueCount != 0) {
+					child[i] = parent2[i];
+					currValueCount--;
+					unusedValues.replace(parent2[i].toString(), currValueCount);
+				}else {
+					child[i] = null; //a placeholder to make finding duplicates easier
+				}
+				
+			}
+		}
+		
+		unusedValues.values().removeAll(Collections.singleton(0)); //remove all unused elements
+		List<String> keysAsArray = new ArrayList<String>(unusedValues.keySet()); //get all unused values as keys
+
+		for(int i = 0; i < child.length; i++) {
+					
+				if(child[i] == null) {
+					
+					String randomKey = keysAsArray.get(rand.nextInt(keysAsArray.size())); //get a random key
+					int currValueCount = unusedValues.get(randomKey); //get the amount of that random key
+					String[] pieceStr = randomKey.split(" ");
+					child[i] = new Piece(pieceStr[0], Float.parseFloat(pieceStr[1]), Float.parseFloat(pieceStr[2]), Float.parseFloat(pieceStr[3])); //set the value to that random key
+					
+					//If its the last one, remove it from the list, if not, decrement the list.
+					if(currValueCount <= 1) {
+						unusedValues.remove(randomKey);
+						keysAsArray = new ArrayList<String>(unusedValues.keySet());
+					}else {
+						currValueCount--;
+						unusedValues.replace(randomKey, currValueCount);
+					}
+				
+				}
+			}
+
+			// Mutate the genes so they can cross
+			for (int i = 0; i < mutationPercent * child.length; i++) {
+				int randPiece1 = rand.nextInt(child.length);
+				int randPiece2 = rand.nextInt(child.length);
+
+				Piece temp = child[randPiece1];
+				child[randPiece1] = child[randPiece2];
+				child[randPiece2] = temp;
+				
+				if((int)(mutationPercent * 100 * 4) == rand.nextInt(100)) {
+					int inversionPiece = rand.nextInt(child.length);
+					child[inversionPiece].invertInclusion();
+				}
+			}	
+		
+		return child;
+	}
+	
 	public static Float[][] reproductionFunction(Float[][] parent1, Float[][] parent2, float mutationPercent) {
 		Float[][] child = new Float[4][10];
 		Random rand = new Random();
