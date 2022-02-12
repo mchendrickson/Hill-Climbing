@@ -24,21 +24,24 @@ public class main {
 		 */
 
 		//For testing purposes
-		//String fileName = "../puzzle1test.txt";	//for testing on Alyssa's PC
-		String fileName = "puzzle2test.txt";
-		int puzzleOption = 2;
-		float timeToRun = 60;
+//		String fileName = "../puzzle2test.txt";	//for testing on Alyssa's PC
+//		String fileName = "puzzle2test.txt";
+//		int puzzleOption = 2;
+//		float timeToRun = 10;
+		
+		int puzzleOption = Integer.parseInt(args[0]);
+		String fileName = args[1]; 
+		float timeToRun = Float.parseFloat(args[2]);
 
 
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 
 		openFile(fileName, puzzleOption);
-		puzzleHashMap = generateRandomizedPopulation(5000, 2);  //increasing this gets better results
-		System.out.println("Generated " + puzzleHashMap.size() + " population...\n");
+		puzzleHashMap = generateRandomizedPopulation(4000, puzzleOption);  //increasing this gets better results
+		System.out.println("Generated population of " + puzzleHashMap.size() + " individuals...\n");
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);
-		Individual best = ga.GA(puzzleOption, puzzleHashMap);
-		System.out.println(best.getFitness());
-		printTower(best.getPieces());
+		Individual best = ga.GA(puzzleHashMap,puzzleOption);
+		printIndividual(best, puzzleOption);
 		
 		
 		//Piece[] child = GeneticAlgo.reproductionFunction(puzzleHashMap.get(0).getPieces(), puzzleHashMap.get(1).getPieces(), 0.1f);
@@ -71,6 +74,15 @@ public class main {
 		System.out.println("Child:");
 		printBins(child);
 		*/
+	}
+	
+	public static void printIndividual(Individual i, int puzzleOption) {
+		if(puzzleOption==1) {
+			printBins(i.getData());
+		}else if(puzzleOption==2) {
+			printTower(i.getPieces());
+		}
+		System.out.println("Score: " + i.getFitness());
 	}
 
 	/**

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -8,10 +9,13 @@ public class GeneticAlgo {
 
 	float duration;
 	Timer timer;
+	static int generation = 0; 
+	static float bestScore = 0;
+	static int bestKey = 0;
 
 
 	public GeneticAlgo(float duration) {
-		this.duration = duration;
+		this.duration = duration * 1000;
 		this.timer = new Timer(duration);
 	}
 	
@@ -21,13 +25,15 @@ public class GeneticAlgo {
 	 * @param population (uninitialized)
 	 * @return best individual
 	 */
-	public Individual GA(int puzzleOption, HashMap<Integer, Individual> population){
-		HashMap<Integer, Individual> newPopulation = new HashMap<Integer, Individual>();
-		float bestScore = 0;
-		int bestKey = 0;
-		timer.run();
+	public Individual GA(HashMap<Integer, Individual> population,int puzzleOption){
+//		timer.run();
+		long startTime = System.currentTimeMillis();
+		long elapsedTime = 0L;
 		do {
 			Random rand = new Random();
+			HashMap<Integer, Individual> newPopulation = new HashMap<Integer, Individual>();
+			bestKey = 0;
+			bestScore = 0;
 			for(int i = 0; i < population.size(); i++) {
 				//randomly pick two parents from population
 				Individual x = population.get(rand.nextInt(population.size()));
@@ -40,7 +46,6 @@ public class GeneticAlgo {
 					Piece[] childTower = reproductionFunction(x.getPieces(), y.getPieces(), 0.05f);	//get the pieces of the child
 					newPopulation.put(i, new Tower(childTower)); //add child to new population
 				}
-				
 				//set the fitness score of the new child
 				newPopulation.get(i).setFitness(fitnessFunction(puzzleOption, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
@@ -48,8 +53,13 @@ public class GeneticAlgo {
 					bestKey = i;
 				}
 			}
-		} while (!timer.finished());
-		return newPopulation.get(bestKey);	//return best member of new population
+			population.clear();
+			population = newPopulation;
+			generation++;
+			elapsedTime = (new Date()).getTime() - startTime;
+		} while (elapsedTime < duration);		
+		System.out.println("num generations: "+generation);
+		return population.get(bestKey);	//return best member of new population
 	}
 	
 	/**
@@ -80,7 +90,6 @@ public class GeneticAlgo {
 		}
 		return fitnessScore;
 	}
-
 
 	/**
 	 * Calculates the product of numbers in bin 1
