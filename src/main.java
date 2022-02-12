@@ -25,13 +25,13 @@ public class main {
 
 		//For testing purposes
 //		String fileName = "../puzzle2test.txt";	//for testing on Alyssa's PC
-//		String fileName = "puzzle2test.txt";
-//		int puzzleOption = 2;
-//		float timeToRun = 10;
+		String fileName = "puzzle1test.txt";
+		int puzzleOption = 1;
+		float timeToRun = 10;
 		
-		int puzzleOption = Integer.parseInt(args[0]);
-		String fileName = args[1]; 
-		float timeToRun = Float.parseFloat(args[2]);
+		//int puzzleOption = Integer.parseInt(args[0]);
+		//String fileName = args[1]; 
+		//float timeToRun = Float.parseFloat(args[2]);
 
 
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
