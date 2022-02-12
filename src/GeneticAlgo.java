@@ -30,6 +30,7 @@ public class GeneticAlgo {
 		long startTime = System.currentTimeMillis();
 		long elapsedTime = 0L;
 		Individual bestIndividual = null;
+		int bestGeneration = 0;
 		Random rand = new Random();
 		do {
 			
@@ -72,6 +73,7 @@ public class GeneticAlgo {
 				if(newPopulation.get(i).getFitness() > bestScore) {
 					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
 					bestIndividual = newPopulation.get(i);
+					bestGeneration = generation;
 					bestKey = i;
 				}
 			}
@@ -80,8 +82,8 @@ public class GeneticAlgo {
 			generation++;
 			elapsedTime = (new Date()).getTime() - startTime;
 		} while (elapsedTime < duration);		
-		System.out.println("Number of generations: "+generation);
-		System.out.println(bestScore + " " + bestKey);
+		System.out.println("Total Number of Generations Ran for: "+generation);
+		System.out.println("Best Solution found at Generation: " + bestGeneration);
 		return bestIndividual;	//return best member of new population
 	}
 	
@@ -237,9 +239,7 @@ public class GeneticAlgo {
 			if(piece.isIncluded()) {
 				total++;
 			}
-
 		}
-
 		return total;
 	}
 
@@ -285,7 +285,6 @@ public class GeneticAlgo {
 				return false;
 			}
 			prevWidth = includedPieces.get(k).getWidth();
-
 		}
 		return true;	//passes all rules
 
@@ -308,7 +307,6 @@ public class GeneticAlgo {
 
 		//Map all tower values to the string
 		for(int i = 0; i < child.length; i++) {
-
 			if(unusedValues.containsKey(parent1[i].toString())) {
 				int currValueCount = unusedValues.get(parent1[i].toString());
 				unusedValues.remove(parent1[i].toString());
@@ -318,16 +316,11 @@ public class GeneticAlgo {
 			}else {
 				unusedValues.put(parent1[i].toString(), 1);
 			}
-
-
 		}
 
-
 		for(int i = 0; i < child.length; i++) {
-
 			if(i <= child.length / 2) {
 				//Check and see if we haven't used the specific value
-
 				int currValueCount = unusedValues.get(parent1[i].toString());
 				if(currValueCount != 0) {
 					child[i] = parent1[i];
@@ -336,7 +329,6 @@ public class GeneticAlgo {
 				}else {
 					child[i] = null; //a placeholder to make finding duplicates easier
 				}
-
 
 			}else if(i > child.length / 2){
 				//Check and see if we haven't used the specific value
@@ -348,7 +340,6 @@ public class GeneticAlgo {
 				}else {
 					child[i] = null; //a placeholder to make finding duplicates easier
 				}
-
 			}
 		}
 
@@ -356,9 +347,7 @@ public class GeneticAlgo {
 		List<String> keysAsArray = new ArrayList<String>(unusedValues.keySet()); //get all unused values as keys
 
 		for(int i = 0; i < child.length; i++) {
-
 			if(child[i] == null) {
-
 				String randomKey = keysAsArray.get(rand.nextInt(keysAsArray.size())); //get a random key
 				int currValueCount = unusedValues.get(randomKey); //get the amount of that random key
 				String[] pieceStr = randomKey.split(" ");
@@ -372,7 +361,6 @@ public class GeneticAlgo {
 					currValueCount--;
 					unusedValues.replace(randomKey, currValueCount);
 				}
-
 			}
 		}
 
@@ -390,7 +378,6 @@ public class GeneticAlgo {
 				child[inversionPiece].invertInclusion();
 			}
 		}	
-
 		return child;
 	}
 
@@ -411,20 +398,15 @@ public class GeneticAlgo {
 				}else {
 					unusedValues.put(parent1[i][j].toString(), 1);
 				}
-
-
 			}
 		}
 
 		//For each row, take the first 5 from parent 1 and the second 5 from parent 2 and combine them.
 
 		for(int i = 0; i <=3; i++) {
-
 			for(int j = 0; j <= 9; j++) {
-
 				if(j <= 4) {
 					//Check and see if we haven't used the specific value
-
 					int currValueCount = unusedValues.get(parent1[i][j].toString());
 					if(currValueCount != 0) {
 						child[i][j] = parent1[i][j];
@@ -433,8 +415,6 @@ public class GeneticAlgo {
 					}else {
 						child[i][j] = Float.MAX_VALUE; //a placeholder to make finding duplicates easier
 					}
-
-
 				}else if(j > 4){
 					//Check and see if we haven't used the specific value
 					int currValueCount = unusedValues.get(parent2[i][j].toString());
@@ -445,7 +425,6 @@ public class GeneticAlgo {
 					}else {
 						child[i][j] = Float.MAX_VALUE; //a placeholder to make finding duplicates easier
 					}
-
 				}
 			}
 		}
@@ -454,11 +433,8 @@ public class GeneticAlgo {
 		List<String> keysAsArray = new ArrayList<String>(unusedValues.keySet()); //get all unused values as keys
 
 		for(int i = 0; i <= 3; i++) {
-
 			for(int j = 0; j <= 9; j++) {
-
 				if(child[i][j] == Float.MAX_VALUE) {
-
 					String randomKey = keysAsArray.get(rand.nextInt(keysAsArray.size())); //get a random key
 					int currValueCount = unusedValues.get(randomKey); //get the amount of that random key
 					child[i][j] = Float.parseFloat(randomKey); //set the value to that random key
@@ -471,7 +447,6 @@ public class GeneticAlgo {
 						currValueCount--;
 						unusedValues.replace(randomKey, currValueCount);
 					}
-
 				}
 			}
 		}

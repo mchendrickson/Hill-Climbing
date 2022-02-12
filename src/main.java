@@ -25,14 +25,13 @@ public class main {
 
 		//For testing purposes
 //		String fileName = "../puzzle2test.txt";	//for testing on Alyssa's PC
-		String fileName = "puzzle1test.txt";
-		int puzzleOption = 1;
-		float timeToRun = 10;
+//		String fileName = "puzzle1test.txt";
+//		int puzzleOption = 1;
+//		float timeToRun = 10;
 		
-		//int puzzleOption = Integer.parseInt(args[0]);
-		//String fileName = args[1]; 
-		//float timeToRun = Float.parseFloat(args[2]);
-
+		int puzzleOption = Integer.parseInt(args[0]);
+		String fileName = args[1]; 
+		float timeToRun = Float.parseFloat(args[2]);
 
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 
@@ -42,7 +41,6 @@ public class main {
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);
 		Individual best = ga.GA(puzzleHashMap,puzzleOption);
 		printIndividual(best, puzzleOption);
-		
 		
 		//Piece[] child = GeneticAlgo.reproductionFunction(puzzleHashMap.get(0).getPieces(), puzzleHashMap.get(1).getPieces(), 0.1f);
 		//System.out.println("Parent 1:");
@@ -76,6 +74,11 @@ public class main {
 		*/
 	}
 	
+	/**
+	 * Prints the data of the Individual
+	 * @param i the Individual
+	 * @param puzzleOption the puzzle the algorithm is solving
+	 */
 	public static void printIndividual(Individual i, int puzzleOption) {
 		if(puzzleOption==1) {
 			printBins(i.getData());
@@ -101,6 +104,10 @@ public class main {
 		System.out.println("\n\n");
 	}
 	
+	/**
+	 * Prints the pieces of the tower
+	 * @param pieces
+	 */
 	public static void printTower(Piece[] pieces) {
 		System.out.println();
 		for(int i = 0; i < pieces.length; i++) {
@@ -108,7 +115,6 @@ public class main {
 			if(pieces[i].isIncluded()) {
 				System.out.println(pieces[i].getType() + ", " + pieces[i].getWidth() + ", " + pieces[i].getStrength() + ", " + pieces[i].getCost());
 			}
-			
 		}
 		System.out.println();
 	}
@@ -146,7 +152,6 @@ public class main {
 				population.put(i, new BinSet(randomizedBins));
 			}
 			
-			
 		}else if(puzzleType == 2) {
 			
 			Piece[] originalTowerPieces = originalTower.getPieces();
@@ -172,10 +177,7 @@ public class main {
 				}
 				population.put(i, new Tower(randTowerPieces));
 			}
-			
-			
 		}
-		
 		return population;
 	}
 
@@ -188,7 +190,6 @@ public class main {
 	 */
 	private static void openFile(String fileName, int puzzleOption) {
 		// Taken from https://www.w3schools.com/java/java_files_read.asp
-
 		try {
 			File myObj = new File(fileName);
 			Scanner myReader = new Scanner(myObj);
@@ -196,21 +197,16 @@ public class main {
 			
 			int i = 0;
 			while (myReader.hasNextLine()) {
-
 				String data = myReader.nextLine();
 				if (puzzleOption == 1) {
-
 					originalBinHolder[i / 10][i % 10] = Float.parseFloat(data);
-
 				} else if (puzzleOption == 2) {
-
 					String[] towerValues = data.split("\\t");
 					Piece piece = new Piece(towerValues[0], Float.parseFloat(towerValues[1]), Float.parseFloat(towerValues[2]), Float.parseFloat(towerValues[3]));
 					pieces.add(piece);
 				}
 				i++;
 			}
-			
 			if (puzzleOption == 2) {
 				Piece[] pieceArr = new Piece[pieces.size()];
 				for(int j = 0; j < pieces.size(); j++) {
