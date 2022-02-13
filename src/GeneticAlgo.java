@@ -33,13 +33,10 @@ public class GeneticAlgo {
 		int bestGeneration = 0;
 		Random rand = new Random();
 		do {
-			
-			
 			//original
 			HashMap<Integer, Individual> newPopulation = new HashMap<Integer, Individual>();
 			//elitism
 //			HashMap<Integer, Individual> newPopulation = getBestTwo(population, puzzleOption);
-			
 			
 			for(int i = newPopulation.size(); i < population.size(); i++) {
 				//random selection four individuals from population
@@ -74,86 +71,115 @@ public class GeneticAlgo {
 					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
 					bestIndividual = newPopulation.get(i);
 					bestGeneration = generation;
-					bestKey = i;
 				}
 			}
 			population.clear();
+			//original
 			population = newPopulation;
+			//culling
+//			population = removeWorstTwo(newPopulation, puzzleOption);
 			generation++;
 			elapsedTime = (new Date()).getTime() - startTime;
+			//used to sample at certain generations
+//			if((generation % 100 == 0 && puzzleOption==1) || (generation % 3 == 0 && puzzleOption==2)) {
+//				System.out.println(bestScore);//+"\t"+generation+"\t"+bestGeneration);
+//			}
 		} while (elapsedTime < duration);		
 		System.out.println("Total Number of Generations Ran for: "+generation);
 		System.out.println("Best Solution found at Generation: " + bestGeneration);
 		return bestIndividual;	//return best member of new population
 	}
-	
+
 	/**
 	 * Sets the fitness of every member of population and returns the best
 	 * 
 	 * @param population hashmap of original population
-	 * @return the individual with the highest fitness score
+	 * @return new hashmap with old population's highest fitness score individuals
 	 */
 	public static HashMap<Integer, Individual> getBestTwo(HashMap<Integer, Individual> population, int puzzleOption) {
 		HashMap<Integer, Individual> bestTwo = new HashMap<Integer, Individual>();
-		float bestScore = 0;
-		float nextBestScore = 0;
 		Individual best = null;
 		Individual nextBest = null;
+		float bestScore = 0;
+		float nextBestScore = 0;
 		for(int i = 0; i < population.size(); i++) {
 			population.get(i).setFitness(fitnessFunction(puzzleOption, population.get(i)));
-			if(population.get(i).getFitness() > bestScore) {
-				bestScore = population.get(i).getFitness();
-				best = population.get(i);
-			}else if(population.get(i).getFitness() > nextBestScore) {
-				nextBestScore = population.get(i).getFitness();
-				nextBest = population.get(i);
+			if(puzzleOption==1) {
+				if(population.get(i).getFitness() > bestScore) {
+					nextBestScore = bestScore;
+					nextBest = best;
+					bestScore = population.get(i).getFitness();
+					best = population.get(i);
+					best.setData(population.get(i).getData());
+				}else if(population.get(i).getFitness() > nextBestScore) {
+					nextBestScore = population.get(i).getFitness();
+					nextBest = population.get(i);
+					nextBest.setData(population.get(i).getData());
+				}
+			} else {
+				if(population.get(i)!=null && checkValidTower(population.get(i).getPieces())) {
+					if(population.get(i).getFitness() > bestScore) {
+						nextBestScore = bestScore;
+						nextBest = best;
+						bestScore = population.get(i).getFitness();
+						best = new Tower(population.get(i).getPieces());
+					}else if(population.get(i).getFitness() > nextBestScore) {
+						nextBestScore = population.get(i).getFitness();
+						nextBest = new Tower(population.get(i).getPieces());
+					}
+				}
 			}
 		}
-		bestTwo.put(0, best);
-		bestTwo.put(1, nextBest);
+		if(best!=null)bestTwo.put(0, best);
+		if(nextBest!=null)bestTwo.put(1, nextBest);
 		return bestTwo;
 	}
-	
+
+	/**
+	 * Returns given population without its lowest two values
+	 * 
+	 * @param population hashmap of original population
+	 * @return culled population
+	 */
 	public static HashMap<Integer, Individual> removeWorstTwo(HashMap<Integer, Individual> population, int puzzleOption) {
-		float worstScore = 0;
-		float nextWorstScore = 0;
+		float worstScore = Float.MAX_VALUE;
+		float nextWorstScore = Float.MAX_VALUE;
 		Individual worst = null;
 		Individual nextWorst = null;
 		int worstKey = 0;
 		int nextWorstKey = 0;
+		Random rand = new Random();
 		for(int i = 0; i < population.size(); i++) {
 			population.get(i).setFitness(fitnessFunction(puzzleOption, population.get(i)));
-			if(population.get(i).getFitness() < worstScore) {
-				worstScore = population.get(i).getFitness();
-				worst = population.get(i);
-				worstKey = i;
-			}else if(population.get(i).getFitness() < nextWorstScore) {
-				nextWorstScore = population.get(i).getFitness();
-				nextWorst = population.get(i);
-				nextWorstKey = i;
+			if(puzzleOption==1) {
+				if(population.get(i).getFitness() < worstScore) {
+					worstScore = population.get(i).getFitness();
+					worst = population.get(i);
+					worst.setData(population.get(i).getData());
+					worstKey = i;
+				}else if(population.get(i).getFitness() < nextWorstScore) {
+					nextWorstScore = population.get(i).getFitness();
+					nextWorst = population.get(i);
+					nextWorst.setData(population.get(i).getData());
+					nextWorstKey = i;
+				}
+			} else {
+				if(population.get(i).getFitness() < worstScore) {
+					worstScore = population.get(i).getFitness();
+					worst = new Tower(population.get(i).getPieces());
+					worstKey = i;
+				}else if(population.get(i).getFitness() < nextWorstScore) {
+					nextWorstScore = population.get(i).getFitness();
+					nextWorst = new Tower(population.get(i).getPieces());
+					nextWorstKey = i;
+				}
 			}
 		}
-		population.remove(nextWorstKey, nextWorst);
-		population.remove(worstKey, worst);
+		population.replace(nextWorstKey, nextWorst, population.get(rand.nextInt(population.size())));
+		population.replace(worstKey, worst, population.get(rand.nextInt(population.size())));
 		return population;
 	}
-	
-	public static HashMap<Integer, Individual> deepCopy(HashMap<Integer, Individual> oldPop, int puzzleOption){
-		HashMap<Integer, Individual> copy = new HashMap<Integer, Individual>();
-		if(puzzleOption==1) {
-			for(int i = 0; i < oldPop.size(); i++) {
-				Float[][] copyData = oldPop.get(i).getData();
-				copy.put(i, new BinSet(copyData));
-			}
-		}else {
-			for(int i = 0; i < oldPop.size(); i++) {
-				Piece[] copyData = oldPop.get(i).getPieces();
-				copy.put(i, new Tower(copyData));
-			}
-		}
-		return copy;		
-	}
-	
+
 	/**
 	 * Calculates the fitness of each individual
 	 * 
@@ -264,7 +290,7 @@ public class GeneticAlgo {
 	 * @return boolean whether valid
 	 */
 	public static boolean checkValidTower(Piece[] pieces){
-		float prevWidth = Float.MAX_VALUE;
+		float prevWidth = pieces[0].getWidth();
 		List<Piece> includedPieces = new ArrayList<Piece>();
 		for(Piece piece : pieces) {
 			if(piece.isIncluded()) {
