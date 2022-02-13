@@ -14,6 +14,7 @@ public abstract class Individual {
 	
 	public abstract Float[][] getData();
 	public abstract void setData(Float[][] d);
+
 	
 	
 	public abstract Piece[] getPieces();

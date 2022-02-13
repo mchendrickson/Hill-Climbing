@@ -17,9 +17,13 @@ public class main {
 	public static Tower originalTower;
 	public static void main(String[] args) {
 		
-		int puzzleOption = Integer.parseInt(args[0]);
-		String fileName = args[1]; 
-		float timeToRun = Float.parseFloat(args[2]);
+		//int puzzleOption = Integer.parseInt(args[0]);
+		//String fileName = args[1]; 
+		//float timeToRun = Float.parseFloat(args[2]);
+		
+		int puzzleOption = 2;
+		String fileName = "puzzle2test2.txt"; 
+		float timeToRun = 10;
 
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 
@@ -32,6 +36,7 @@ public class main {
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);
 		Individual best = ga.GA(puzzleHashMap,puzzleOption);
 		printIndividual(best, puzzleOption);
+		//System.out.println(GeneticAlgo.checkValidTower(best.getPieces()));
 	}
 	
 	/**
@@ -43,7 +48,7 @@ public class main {
 		if(puzzleOption==1) {
 			printBins(i.getData());
 		}else if(puzzleOption==2) {
-			printTower(i.getPieces());
+			//printTower(i.getPieces());
 		}
 		System.out.println("Score: " + i.getFitness());
 	}

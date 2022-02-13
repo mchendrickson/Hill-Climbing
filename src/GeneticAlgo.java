@@ -30,6 +30,7 @@ public class GeneticAlgo {
 		long startTime = System.currentTimeMillis();
 		long elapsedTime = 0L;
 		Individual bestIndividual = null;
+		String savedSol = "";
 		int bestGeneration = 0;
 		Random rand = new Random();
 		do {
@@ -68,9 +69,16 @@ public class GeneticAlgo {
 				//set the fitness score of the new child
 				newPopulation.get(i).setFitness(fitnessFunction(puzzleOption, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
+					bestIndividual = null;
 					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
-					bestIndividual = newPopulation.get(i);
+					bestIndividual = Tower.clone(newPopulation.get(i));
+					bestIndividual.setFitness(bestScore);
+					savedSol = bestIndividual.toString();
 					bestGeneration = generation;
+					
+					//System.out.println(bestScore + " gen: " + generation);
+					//main.printTower(bestIndividual.getPieces());
+					
 				}
 			}
 			population.clear();
@@ -85,8 +93,10 @@ public class GeneticAlgo {
 //				System.out.println(bestScore);//+"\t"+generation+"\t"+bestGeneration);
 //			}
 		} while (elapsedTime < duration);		
-		System.out.println("Total Number of Generations Ran for: "+generation);
+		
+		System.out.println("Total Number of Generations Ran for: "+ generation);
 		System.out.println("Best Solution found at Generation: " + bestGeneration);
+		System.out.println("\n\n" + savedSol);
 		return bestIndividual;	//return best member of new population
 	}
 
