@@ -16,18 +16,6 @@ public class main {
 	public static Float[][] originalBinHolder = new Float[4][10];
 	public static Tower originalTower;
 	public static void main(String[] args) {
-
-		/*
-		 * String fileName = args[0]; 
-		 * int puzzleOption = Integer.parseInt(args[1]);
-		 * float timeToRun = Float.parseFloat(args[2]);
-		 */
-
-		//For testing purposes
-//		String fileName = "../puzzle2test.txt";	//for testing on Alyssa's PC
-//		String fileName = "puzzle1test.txt";
-//		int puzzleOption = 1;
-//		float timeToRun = 10;
 		
 		int puzzleOption = Integer.parseInt(args[0]);
 		String fileName = args[1]; 
@@ -36,42 +24,14 @@ public class main {
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 
 		openFile(fileName, puzzleOption);
-		puzzleHashMap = generateRandomizedPopulation(4000, puzzleOption);  //increasing this gets better results
+		if(puzzleOption==1)
+			puzzleHashMap = generateRandomizedPopulation(500, puzzleOption);  //increasing this gets better results
+		else if(puzzleOption==2)
+			puzzleHashMap = generateRandomizedPopulation(40000, puzzleOption);
 		System.out.println("Generated population of " + puzzleHashMap.size() + " individuals...\n");
 		GeneticAlgo ga = new GeneticAlgo(timeToRun);
 		Individual best = ga.GA(puzzleHashMap,puzzleOption);
 		printIndividual(best, puzzleOption);
-		
-		//Piece[] child = GeneticAlgo.reproductionFunction(puzzleHashMap.get(0).getPieces(), puzzleHashMap.get(1).getPieces(), 0.1f);
-		//System.out.println("Parent 1:");
-		//printTower(originalTower.getPieces());
-		//System.out.println(GeneticAlgo.fitnessFunction(2, originalTower));
-		//System.out.println("Parent 2:");
-		//printTower(puzzleHashMap.get(1).getPieces());
-		//System.out.println("Child:");
-		//printTower(child);
-		
-		
-		//printTower(best.getPieces());
-		
-		/*	
-
-		printBins(best.getData());
-		System.out.println(best.getFitness());
-		*/
-		
-		/*
-		// Breed parent 1 and parent 2 to create a child, mutating 10% of the genes
-		Float[][] child = GeneticAlgo.reproductionFunction(puzzleHashMap.get(0).getData(), puzzleHashMap.get(1).getData(), 0.1f);
-
-		// Example of two parents and then their child
-		System.out.println("Parent 1:");
-		printBins(puzzleHashMap.get(0).getData());
-		System.out.println("Parent 2:");
-		printBins(puzzleHashMap.get(1).getData());
-		System.out.println("Child:");
-		printBins(child);
-		*/
 	}
 	
 	/**
