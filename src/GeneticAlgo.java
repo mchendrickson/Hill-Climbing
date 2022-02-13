@@ -69,16 +69,19 @@ public class GeneticAlgo {
 				//set the fitness score of the new child
 				newPopulation.get(i).setFitness(fitnessFunction(puzzleOption, newPopulation.get(i)));
 				if(newPopulation.get(i).getFitness() > bestScore) {
-					bestIndividual = null;
-					bestScore = newPopulation.get(i).getFitness();	//keep track of best child
-					bestIndividual = Tower.clone(newPopulation.get(i));
-					bestIndividual.setFitness(bestScore);
-					savedSol = bestIndividual.toString();
-					bestGeneration = generation;
-					
-					//System.out.println(bestScore + " gen: " + generation);
-					//main.printTower(bestIndividual.getPieces());
-					
+					if (puzzleOption == 1) {
+						bestScore = newPopulation.get(i).getFitness();	//keep track of best child
+						bestIndividual = newPopulation.get(i);
+						bestGeneration = generation;
+					}
+					if (puzzleOption == 2) {
+						bestIndividual = null;
+						bestScore = newPopulation.get(i).getFitness();	//keep track of best child
+						bestIndividual = Tower.clone(newPopulation.get(i));
+						bestIndividual.setFitness(bestScore);
+						savedSol = bestIndividual.toString();
+						bestGeneration = generation;
+					}					
 				}
 			}
 			population.clear();
@@ -96,7 +99,7 @@ public class GeneticAlgo {
 		
 		System.out.println("Total Number of Generations Ran for: "+ generation);
 		System.out.println("Best Solution found at Generation: " + bestGeneration);
-		System.out.println("\n\n" + savedSol);
+		System.out.println("\n" + savedSol);
 		return bestIndividual;	//return best member of new population
 	}
 

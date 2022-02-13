@@ -17,13 +17,13 @@ public class main {
 	public static Tower originalTower;
 	public static void main(String[] args) {
 		
-		//int puzzleOption = Integer.parseInt(args[0]);
-		//String fileName = args[1]; 
-		//float timeToRun = Float.parseFloat(args[2]);
+		int puzzleOption = Integer.parseInt(args[0]);
+		String fileName = args[1]; 
+		float timeToRun = Float.parseFloat(args[2]);
 		
-		int puzzleOption = 2;
-		String fileName = "puzzle2test2.txt"; 
-		float timeToRun = 10;
+//		int puzzleOption = 2;
+//		String fileName = "puzzle2test2.txt"; 
+//		float timeToRun = 10;
 
 		System.out.println("Solving Puzzle " + puzzleOption + " for " + timeToRun + " seconds...\n");
 
@@ -47,8 +47,6 @@ public class main {
 	public static void printIndividual(Individual i, int puzzleOption) {
 		if(puzzleOption==1) {
 			printBins(i.getData());
-		}else if(puzzleOption==2) {
-			//printTower(i.getPieces());
 		}
 		System.out.println("Score: " + i.getFitness());
 	}
@@ -66,7 +64,7 @@ public class main {
 				System.out.print(bin[k][j] + "\t");
 			}
 		}
-		System.out.println("\n\n");
+		System.out.println("\n");
 	}
 	
 	/**
