@@ -26,7 +26,6 @@ public class GeneticAlgo {
 	 * @return best individual
 	 */
 	public Individual GA(HashMap<Integer, Individual> population,int puzzleOption){
-		//		timer.run();
 		long startTime = System.currentTimeMillis();
 		long elapsedTime = 0L;
 		Individual bestIndividual = null;
@@ -35,9 +34,9 @@ public class GeneticAlgo {
 		Random rand = new Random();
 		do {
 			//original
-			HashMap<Integer, Individual> newPopulation = new HashMap<Integer, Individual>();
+//			HashMap<Integer, Individual> newPopulation = new HashMap<Integer, Individual>();
 			//elitism
-//			HashMap<Integer, Individual> newPopulation = getBestTwo(population, puzzleOption);
+			HashMap<Integer, Individual> newPopulation = getBestTwo(population, puzzleOption);
 			
 			for(int i = newPopulation.size(); i < population.size(); i++) {
 				//random selection four individuals from population
@@ -86,9 +85,9 @@ public class GeneticAlgo {
 			}
 			population.clear();
 			//original
-			population = newPopulation;
+//			population = newPopulation;
 			//culling
-//			population = removeWorstTwo(newPopulation, puzzleOption);
+			population = removeWorstTwo(newPopulation, puzzleOption);
 			generation++;
 			elapsedTime = (new Date()).getTime() - startTime;
 			//used to sample at certain generations
@@ -99,7 +98,7 @@ public class GeneticAlgo {
 		
 		System.out.println("Total Number of Generations Ran for: "+ generation);
 		System.out.println("Best Solution found at Generation: " + bestGeneration);
-		System.out.println("\n" + savedSol);
+		System.out.println(savedSol);
 		return bestIndividual;	//return best member of new population
 	}
 
